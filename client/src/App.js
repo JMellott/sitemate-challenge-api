@@ -49,6 +49,10 @@ function App() {
         response = await fetch(`/api/issue/${id}`);
         break;
 
+      case 'getAll':
+        response = await fetch(`/api/issue`);
+        break;
+
       default:
         setResult('Invalid operation');
         return;
@@ -70,14 +74,19 @@ function App() {
             <option value="update">Update</option>
             <option value="delete">Delete</option>
             <option value="get">Get</option>
+            <option value="getAll">Get All</option>
           </select>
         </label>
         <br />
-        <label >
-          ID:
-          <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
-        </label>
-        <br />
+        {operation !== 'getAll' ? (
+          <>
+            <label >
+              ID:
+              <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
+            </label>
+            <br />
+          </>
+        ) : null }
         {operation === 'create' || operation === 'update' ? (
           <>
             <label>
@@ -94,11 +103,21 @@ function App() {
         ) : null }
         <button type="submit">Submit</button>
       </form>
+      {result ? (
       <div className="result">
         <h2>Result:</h2>
-        <pre>Issue {result.id}: {result.title}</pre>
-        <pre>{result.description}</pre>
+        {result.error ? (
+          <>
+            <pre>{result.error}</pre>
+          </>
+        ) : (
+        <>
+          <pre>Issue {result.id}: {result.title}</pre>
+          <pre>{result.description}</pre>
+        </> 
+        )}
       </div>
+      ) : null }
     </div>
   );
 }

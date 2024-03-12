@@ -10,13 +10,24 @@ let issues = [];
 
 // Get issue by id
 app.get('/api/issue/:id', (req, res) => {
-    const issue = issues.find((item) => item.id == req.params.id)
+    const issue = issues.find((item) => item.id == req.params.id);
     if (issue) {
-        console.log("Get: ", issue)
+        console.log("Get: ", issue);
         res.json(issue);
     } else {
         console.log("Error: No issue found with given id");
-        res.json({"Error": "No issue found with given id"});
+        res.status(404).json({ error: 'Issue not found' });
+    }
+});
+
+// Get all issues
+app.get('/api/issue', (req, res) => {
+    if (issues.length !== 0) {
+      console.log("Get: ", issues);
+      res.json(issues);
+    } else {
+      console.log("Error: No issues to get");
+      res.status(404).json({ error: 'No issues found' });
     }
 });
 
@@ -31,7 +42,7 @@ app.post('/api/issue', (req, res) => {
 // Update issue by id
 app.put('/api/issue', (req, res) => {
     const updatedIssue = req.body;
-    const index = issues.findIndex((item) => item.id == updatedIssue.id)
+    const index = issues.findIndex((item) => item.id == updatedIssue.id);
     if (index !== -1) {
       issues[index] = updatedIssue;
       console.log("Updated:", updatedIssue);
@@ -55,5 +66,5 @@ app.delete('/api/issue/:id', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
